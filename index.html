@@ -54,7 +54,7 @@
             text-decoration: none;
         }
 
-        #onDuty {
+        #onDuty, #mopping {
             font-size: 1.6rem;
             font-weight: bold;
             margin-bottom: 20px;
@@ -83,6 +83,7 @@
     <h1 id="heading">TRỰC NHẬT HÔM NAY</h1>
     <h2 id="date"></h2>
     <h2 id="onDuty">Loading</h2>
+    <h3 id="mopping"></h3>
     <h3><a id="calender" target="_blank" href="./table.html">Xem toàn bộ lịch tại đây</a></h3>
     <h3 id="note">"Yêu cầu các bạn thực hiện nhiệm vụ một cách nghiêm túc, vui vẻ, không quau. cám ơn các bạn! 🤩🤩🤩"</h3>
     <h4 id="creator">~ Nguyên Khoa ~</h4>
@@ -151,6 +152,9 @@
             }
 
             onDutyElem.innerHTML = `Những người trực hôm nay là: <span id="nameStudent">${currentGroup}</span>`;
+            if (currentDate.getDay() == 1) {
+                document.querySelector('#mopping').textContent = 'Hôm nay có lau nhà, các bạn lưu ý nhé!';   
+            }
         }
     </script>
 </body>
