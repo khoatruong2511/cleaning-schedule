@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LỊCH TRỰC NHẬT 10 LÝ</title>
+    <style>
+        @keyframes fade-in{
+            0%{
+                opacity:0;
+                transform: translateY(100%);
+            }
+            100%{
+                opacity:1;
+                transform: translateY(0%);
+
+            }
+        }
+
+        body {
+            overflow:hidden;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(0, #DBEEF7 25%, #FAE7EB 75%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            animation: 1.25s ease-in-out fade-in;
+            font-size: 10px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: bold;
+        }
+
+        #date {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        #onDuty {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        #nameStudent {
+            display: inline-block;
+            padding: 5px;
+            background-color: #EECEDA;
+        }
+
+        #note {
+            font-size: 1.2rem;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+
+        #creator {
+            font-size: 1.2rem;
+            font-weight: normal;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="heading">TRỰC NHẬT HÔM NAY</h1>
+    <h2 id="date"></h2>
+    <h2 id="onDuty">Loading</h2>
+    <h3 id="note">"Yêu cầu các bạn thực hiện nhiệm vụ một cách nghiêm túc, vui vẻ, không quau. cám ơn các bạn! 🤩🤩🤩"</h3>
+    <h4 id="creator">~ Nguyên Khoa ~</h4>
+
+    <script>
+        const weekDays = ["Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu"];
+        const daysOfWeek = ["Chủ Nhật","Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu","Thứ bảy"];
+
+        const groupOfStudent = [
+            ["Hứa Trần Vi Anh, Trần Âu Nguyệt Tú, Nguyễn Khánh Nam Việt"],
+            ["Phạm Trà My, Lê Khánh Linh"],
+            ["Lê Huỳnh Khánh Linh, Nguyễn Thị Minh Ngọc"],
+            ["Phan Nguyễn Như Quỳnh, Lê Nguyên Khánh"],
+
+            ["Trần Bình Anh, Nguyên Duy Anh"],
+            ["Nguyễn Đức Anh, Nguyễn Minh Khang, Lê Quách Bảo Thịnh"],
+            ["Nguyễn Quỳnh Anh, Nguyễn Hoàng Thiên Nga"],
+            ["Nguyễn Hoàng Ngọc Phát, Trương Nhựt Phong"],
+
+            ["Phan Hoàng An, Nguyễn Minh Tuấn Anh"],
+            ["Đỗ Nguyên Khoa, Mai Trung Nghĩa"],
+            ["Lê Minh Sơn, Phùng Nguyễn Nhật Thịnh. Nguyễn Thành Tuyên"],
+
+            ["Trần Hoàng Dũng, Võ Minh Khôi"],
+            ["Dương Hiểu Nguyên, Trương Đình Nguyên"],
+            ["Phan Duy Quốc Thái, Vũ Hạo Thiên"],
+            ["Nguyễn Hữu Tín, Vương Đỗ Khánh Toàn, Lê Quang Trí"]
+        ];
+        let currentDate = new Date("2024-10-14");
+        let startDate = new Date("2024-10-14");
+        let endDate = new Date("2025-06-30");
+        let schedule = [];
+
+        let tempDate = startDate;
+        document.querySelector('#date').textContent = `${daysOfWeek[currentDate.getDay()]}, ${currentDate.getDate()} - ${currentDate.getMonth()+1} - ${currentDate.getFullYear()}`;
+        while (tempDate <= endDate) {
+            if (tempDate.getDay() >= 1 && tempDate.getDay() <= 5) {  // Monday to Friday
+                let pair = groupOfStudent.shift();
+                schedule.push({
+                    date: new Date(tempDate),
+                    pair: pair
+                });
+                groupOfStudent.push(pair);  // Re-append pair to end of list
+            }
+            tempDate.setDate(tempDate.getDate() + 1);
+        }
+
+        function isSameDate(d1, d2) {
+            return d1.getFullYear() === d2.getFullYear() &&
+                d1.getMonth() === d2.getMonth() &&
+                d1.getDate() === d2.getDate();
+        }
+
+        let currentGroup = null;
+        let isWeekend = currentDate.getDay() == 6 || currentDate.getDay() == 0;
+
+        let onDutyElem = document.querySelector('#onDuty');
+        if (isWeekend) {
+            onDutyElem.textContent = 'Hôm nay không có người trực. 🥰🥰🥰';
+        } else {
+            for (let entry of schedule) {
+                if (isSameDate(entry.date, currentDate)) {
+                    currentGroup = entry.pair;
+                    break;
+                }
+            }
+
+            onDutyElem.innerHTML = `Những người trực hôm nay là: <span id="nameStudent">${currentGroup}</span>`;
+        }
+    </script>
+</body>
+</html>

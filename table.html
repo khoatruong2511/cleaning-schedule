@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch trực nhật</title>
+    <style>
+        body {
+            background: rgb(219,238,247);
+            background: linear-gradient(0, #F3D17C 25%, #A9CDD7 75%);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        table {
+            width: 60%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        table, th, td {
+            border: 1px solid white;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #83B8C6;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #d3f2ff;
+        }
+        tr:nth-child(odd) {
+            background-color: #e4fdff;
+        }
+        #searchInput {
+            width: 60%;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 16px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>LỊCH TRỰC NHẬT</h1>
+
+<input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Tìm kiếm tên của bạn hoặc ngày tháng...">
+
+<table>
+    <thead>
+        <tr>
+            <th>Thứ</th>
+            <th>Ngày</th>
+            <th>Học Sinh Trực Nhật</th>
+        </tr>
+    </thead>
+    <tbody id="scheduleTable">
+    </tbody>
+</table>
+
+<script>
+    const dayOfWeek = ["Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu"];
+    const studentPairs = [
+        ["Hứa Trần Vi Anh, Trần Âu Nguyệt Tú, Nguyễn Khánh Nam Việt"],
+        ["Phạm Trà My, Lê Khánh Linh"],
+        ["Lê Huỳnh Khánh Linh, Nguyễn Thị Minh Ngọc"],
+        ["Phan Nguyễn Như Quỳnh, Lê Nguyên Khánh"],
+
+        ["Trần Bình Anh, Nguyên Duy Anh"],
+        ["Nguyễn Đức Anh, Nguyễn Minh Khang, Lê Quách Bảo Thịnh"],
+        ["Nguyễn Quỳnh Anh, Nguyễn Hoàng Thiên Nga"],
+        ["Nguyễn Hoàng Ngọc Phát, Trương Nhựt Phong"],
+
+        ["Phan Hoàng An, Nguyễn Minh Tuấn Anh"],
+        ["Đỗ Nguyên Khoa, Mai Trung Nghĩa"],
+        ["Lê Minh Sơn, Phùng Nguyễn Nhật Thịnh. Nguyễn Thành Tuyên"],
+
+        ["Trần Hoàng Dũng, Võ Minh Khôi"],
+        ["Dương Hiểu Nguyên, Trương Đình Nguyên"],
+        ["Phan Duy Quốc Thái, Vũ Hạo Thiên"],
+        ["Nguyễn Hữu Tín, Vương Đỗ Khánh Toàn, Lê Quang Trí"]
+    ];
+
+    let startDate = new Date("2024-09-16");
+    let endDate = new Date("2025-06-30");
+    let currentDate = new Date(startDate);
+    let schedule = [];
+
+    while (currentDate <= endDate) {
+        if (currentDate.getDay() >= 1 && currentDate.getDay() <= 5) {
+            // Assign cleaning pair and push to schedule
+            let pair = studentPairs.shift();
+            schedule.push({
+                date: currentDate.toLocaleDateString('vi-VN'),
+                pair: pair
+            });
+            studentPairs.push(pair);  // Re-append pair to end of list
+        }
+        currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+    }
+
+    // Populate the table with schedule
+    let scheduleTable = document.getElementById("scheduleTable");
+    let dayIndex = 0;
+
+    schedule.forEach((entry, index) => {
+        let row = scheduleTable.insertRow();
+        let dayCell = row.insertCell(0);
+        let dateCell = row.insertCell(1);
+        let pairCell = row.insertCell(2);
+
+        dayCell.innerText = dayOfWeek[dayIndex];
+        dateCell.innerText = entry.date;
+        pairCell.innerText = entry.pair.join(" và ");
+
+        // Rotate days of the week
+        dayIndex++;
+        if (dayIndex > 4) dayIndex = 0;
+    });
+
+    function filterTable() {
+        let input = document.getElementById("searchInput");
+        let filter = input.value.toLowerCase();
+        let rows = scheduleTable.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            let dateCell = rows[i].getElementsByTagName("td")[1];
+            let pairCell = rows[i].getElementsByTagName("td")[2];
+            if (dateCell || pairCell) {
+                let dateText = dateCell.textContent || dateCell.innerText;
+                let pairText = pairCell.textContent || pairCell.innerText;
+                if (dateText.toLowerCase().indexOf(filter) > -1 || pairText.toLowerCase().indexOf(filter) > -1) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }       
+        }
+    }
+</script>
+
+</body>
+</html>
