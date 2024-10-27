@@ -91,6 +91,13 @@
     <script>
         const weekDays = ["Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu"];
         const daysOfWeek = ["Chủ Nhật","Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu","Thứ bảy"];
+        const getDaysArray = function(start, end) {
+            const arr = [];
+            for(const dt=new Date(start); dt<=new Date(end); dt.setDate(dt.getDate()+1)) {
+                arr.push(new Date(dt));
+            }
+            return arr;
+        };
 
         const groupOfStudent = [
             ["Hứa Trần Vi Anh, Trần Âu Nguyệt Tú, Nguyễn Khánh Nam Việt"],
@@ -98,7 +105,7 @@
             ["Lê Huỳnh Khánh Linh, Nguyễn Thị Minh Ngọc"],
             ["Phan Nguyễn Như Quỳnh, Lê Nguyên Khánh"],
 
-            ["Trần Bình Anh, Nguyên Duy Anh"],
+            ["Trần Bình Anh, Nguyễn Duy Anh"],
             ["Nguyễn Đức Anh, Nguyễn Minh Khang, Lê Quách Bảo Thịnh"],
             ["Nguyễn Quỳnh Anh, Nguyễn Hoàng Thiên Nga"],
             ["Nguyễn Hoàng Ngọc Phát, Trương Nhựt Phong"],
@@ -116,6 +123,7 @@
         let startDate = new Date("2024-10-14");
         let endDate = new Date("2025-06-30");
         let schedule = [];
+        let specialDate = getDaysArray(new Date("2024-10-21"), new Date("2024-10-25"));
 
         let tempDate = startDate;
         document.querySelector('#date').textContent = `${daysOfWeek[currentDate.getDay()]}, ${currentDate.getDate()} - ${currentDate.getMonth()+1} - ${currentDate.getFullYear()}`;
@@ -139,9 +147,17 @@
 
         let currentGroup = null;
         let isWeekend = currentDate.getDay() == 6 || currentDate.getDay() == 0;
+        let isSpecialDay = function (td, list) {
+            for (let date of list) {
+                if (isSameDate(td, date)) {
+                    return true;
+                }
+            }
+            return false;
+        };
 
         let onDutyElem = document.querySelector('#onDuty');
-        if (isWeekend) {
+        if ((isWeekend) || isSpecialDay(currentDate, specialDate)) {
             onDutyElem.textContent = 'Hôm nay không có người trực. 🥰🥰🥰';
         } else {
             for (let entry of schedule) {
