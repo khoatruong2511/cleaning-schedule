@@ -89,13 +89,37 @@
         ["Nguyễn Hữu Tín, Vương Đỗ Khánh Toàn, Lê Quang Trí"]
     ];
 
+    const getDaysArray = function(start, end) {
+        const arr = [];
+        for(const dt=new Date(start); dt<=new Date(end); dt.setDate(dt.getDate()+1)) {
+            arr.push(new Date(dt));
+        }
+        return arr;
+    };
+
+    function isSameDate(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate();
+    }
+
+    let isSpecialDay = function (td, list) {
+        for (let date of list) {
+            if (isSameDate(td, date)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     let startDate = new Date("2024-10-14");
     let endDate = new Date("2025-06-30");
     let currentDate = new Date(startDate);
     let schedule = [];
+    let specialDate = getDaysArray(new Date("2024-10-21"), new Date("2024-10-25"));
 
     while (currentDate <= endDate) {
-        if (currentDate.getDay() >= 1 && currentDate.getDay() <= 5) {
+        if (currentDate.getDay() >= 1 && currentDate.getDay() <= 5 && !(isSpecialDay(currentDate, specialDate))) {
             // Assign cleaning pair and push to schedule
             let pair = studentPairs.shift();
             schedule.push({
